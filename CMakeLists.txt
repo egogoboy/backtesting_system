@@ -15,6 +15,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 include(CTest)
 
+enable_testing()
+
 add_subdirectory(src)
 add_subdirectory(external/googletest EXCLUDE_FROM_ALL)
 add_subdirectory(tests)
