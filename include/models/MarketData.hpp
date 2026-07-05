@@ -3,11 +3,17 @@
 #include <cstdint>
 #include <string>
 
+struct OHLC {
+    double open;
+    double high;
+    double low;
+    double close;
+};
+
 class MarketData {
   public:
-    MarketData(const std::string &symbol, double open, double high, double low, double close,
-               uint64_t timestamp)
-        : symbol_{symbol}, open_{open}, high_{high}, low_{low}, close_{close},
+    MarketData(const std::string &symbol, const OHLC &ohlc, uint64_t timestamp)
+        : symbol_{symbol}, open_{ohlc.open}, high_{ohlc.high}, low_{ohlc.low}, close_{ohlc.close},
           timestamp_{timestamp} {}
 
     std::string get_symbol() const {
@@ -32,6 +38,11 @@ class MarketData {
 
     uint64_t get_timestamp() const {
         return timestamp_;
+    }
+
+    friend bool operator==(const MarketData &lhs, const MarketData &rhs) {
+        return lhs.symbol_ == rhs.symbol_ && lhs.open_ == rhs.open_ && lhs.high_ == rhs.high_ &&
+               lhs.low_ == rhs.low_ && lhs.close_ == rhs.close_ && lhs.timestamp_ == rhs.timestamp_;
     }
 
   private:
