@@ -1,5 +1,6 @@
 add_library(backtester
     main.cpp
+    utils/CSVFileLoader.cpp
 )
 
 target_include_directories(backtester
