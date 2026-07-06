@@ -1,14 +1,14 @@
-add_executable(test_engine
+add_executable(unit_tests
     test_main.cpp
+
     test_csv_file_loader.cpp
 )
 
-target_link_libraries(test_engine
+target_link_libraries(unit_tests
     PRIVATE
-        backtester
+        backtester_core
         GTest::gtest_main
 )
 
 include(GoogleTest)
-
-gtest_discover_tests(test_engine)
+gtest_discover_tests(unit_tests)

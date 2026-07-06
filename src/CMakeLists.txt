@@ -1,11 +1,22 @@
-add_library(backtester
-    main.cpp
-    utils/CSVFileLoader.cpp
-)
+add_library(backtester_core)
 
-target_include_directories(backtester
+target_include_directories(backtester_core
     PUBLIC
         ${PROJECT_SOURCE_DIR}/include
 )
 
-target_compile_features(backtester PUBLIC cxx_std_20)
+target_sources(backtester_core
+    PRIVATE
+        core/Engine.cpp
+
+        data_feed/DataFeed.cpp
+
+        enums/EventType.cpp
+
+        events/Event.cpp
+        events/MarketEvent.cpp
+
+        models/MarketData.cpp
+
+        utils/CSVFileLoader.cpp
+)

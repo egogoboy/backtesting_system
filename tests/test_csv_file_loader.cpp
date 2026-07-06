@@ -1,5 +1,5 @@
-#include "models/MarketData.hpp"
-#include "utils/CSVFileLoader.hpp"
+#include "backtester/models/MarketData.hpp"
+#include "backtester/utils/CSVFileLoader.hpp"
 
 #include <fstream>
 #include <gtest/gtest.h>
