@@ -40,7 +40,7 @@ TEST(FileTest, ReadFromFile) {
 
     for (auto it1 = raw_data.begin(), it2 = loaded_data.begin();
          it1 != raw_data.end() && it2 != raw_data.end(); ++it1, ++it2) {
-        EXPECT_EQ(true, true);
+        EXPECT_EQ(*it1, *it2);
     }
 }
 
