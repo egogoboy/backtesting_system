@@ -24,7 +24,19 @@ std::vector<MarketData> CSVFileLoader::load_file(const std::string &filename) {
         uint64_t time = std::stoull(string_time);
 
         OHLC ohlc = {};
-        line_stream >> ohlc.open >> ohlc.high >> ohlc.low >> ohlc.close;
+        std::string token;
+        if (std::getline(line_stream, token, ',')) {
+            ohlc.open = std::stod(token);
+        }
+        if (std::getline(line_stream, token, ',')) {
+            ohlc.high = std::stod(token);
+        }
+        if (std::getline(line_stream, token, ',')) {
+            ohlc.low = std::stod(token);
+        }
+        if (std::getline(line_stream, token, ',')) {
+            ohlc.close = std::stod(token);
+        }
 
         data.push_back(MarketData(symbol, ohlc, time));
     }
