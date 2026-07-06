@@ -28,6 +28,8 @@ TEST(DataFeed, LoadFromFile) {
 
     DataFeed data_feed(temp_file);
 
+    std::filesystem::remove(temp_file);
+
     auto it = raw_data.begin();
 
     while (data_feed.has_next()) {
