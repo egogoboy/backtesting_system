@@ -2,6 +2,7 @@ add_executable(unit_tests
     test_main.cpp
 
     test_csv_file_loader.cpp
+    test_data_feed.cpp
 )
 
 target_link_libraries(unit_tests

@@ -1,0 +1,27 @@
+#pragma once
+
+#include "backtester/events/MarketEvent.hpp"
+#include "backtester/models/MarketData.hpp"
+#include "backtester/utils/CSVFileLoader.hpp"
+#include <string>
+#include <vector>
+
+class DataFeed {
+  public:
+    DataFeed(const std::string &filename) {
+        data_ = CSVFileLoader::load_file(filename);
+        current_ = data_.begin();
+    }
+
+    bool has_next() const {
+        return current_ != data_.end();
+    }
+
+    MarketEvent get_next_market_event() {
+        return *current_++;
+    }
+
+  private:
+    std::vector<MarketData>::iterator current_;
+    std::vector<MarketData> data_;
+};
