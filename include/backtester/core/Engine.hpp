@@ -1,30 +1,20 @@
 #pragma once
 
-#include "backtester/events/Event.hpp"
+#include "backtester/core/EventQueue.hpp"
+#include "backtester/strategy/Strategy.hpp"
 #include <chrono>
-#include <memory>
-#include <queue>
 
 class Engine {
   public:
-    Engine() : start_time_{std::chrono::system_clock::now()} {}
-
-    void run() {
-        while (!event_queue_.empty()) {
-            switch (event_queue_.front()->get_type()) {
-            case EventType::MARKET:
-                break;
-            case EventType::SIGNAL:
-                break;
-            case EventType::ORDER:
-                break;
-            case EventType::FILL:
-                break;
-            }
-        }
+    Engine(Strategy &strategy)
+        : start_time_{std::chrono::system_clock::now()}, strategy_{strategy.shared_from_this()} {
+        strategy_->set_event_queue(event_queue_);
     }
+
+    void run();
 
   private:
     std::chrono::system_clock::time_point start_time_;
-    std::queue<std::shared_ptr<Event>> event_queue_;
+    std::shared_ptr<Strategy> strategy_;
+    EventQueue event_queue_;
 };
