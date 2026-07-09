@@ -4,10 +4,11 @@
 #include "backtester/events/MarketEvent.hpp"
 #include "backtester/events/SignalEvent.hpp"
 #include "backtester/models/Signal.hpp"
+#include <memory>
 
 class Engine;
 
-class Strategy {
+class Strategy : public std::enable_shared_from_this<Strategy> {
   public:
     virtual void on_market(const MarketEvent &event) = 0;
 
