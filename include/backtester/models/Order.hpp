@@ -1,0 +1,72 @@
+#pragma once
+
+#include "backtester/enums/Direction.hpp"
+#include "backtester/enums/OrderStatus.hpp"
+#include "backtester/enums/OrderType.hpp"
+#include <cstdint>
+#include <string>
+
+class Order {
+  public:
+    Order(const std::string &symbol, Direction direction, double volume, OrderType type,
+          double entry_price)
+        : id_{++last_order_id}, symbol_{symbol}, direction_{direction}, volume_{volume},
+          type_{type}, entry_price_{entry_price} {}
+
+    bool execute() {
+        if (status_ != OrderStatus::PENDING) {
+            return false;
+        }
+
+        status_ = OrderStatus::EXECUTED;
+        return true;
+    }
+
+    bool cancel() {
+        if (status_ != OrderStatus::PENDING) {
+            return false;
+        }
+
+        status_ = OrderStatus::CANCELED;
+        return true;
+    }
+
+    uint32_t get_id() const {
+        return id_;
+    }
+
+    OrderStatus get_status() const {
+        return status_;
+    }
+
+    const std::string &get_symbol() const {
+        return symbol_;
+    }
+
+    Direction get_direction() const {
+        return direction_;
+    }
+
+    double get_volume() const {
+        return volume_;
+    }
+
+    OrderType get_type() const {
+        return type_;
+    }
+
+    double get_entry_price() const {
+        return entry_price_;
+    }
+
+  private:
+    uint32_t id_;
+    OrderStatus status_ = OrderStatus::PENDING;
+    std::string symbol_;
+    Direction direction_;
+    double volume_;
+    OrderType type_;
+    double entry_price_;
+
+    static inline uint32_t last_order_id = 0;
+};
