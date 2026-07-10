@@ -8,10 +8,19 @@
 
 class Order {
   public:
-    Order(const std::string &symbol, Direction direction, double volume, OrderType type,
-          double entry_price)
-        : id_{++last_order_id}, symbol_{symbol}, direction_{direction}, volume_{volume},
-          type_{type}, entry_price_{entry_price} {}
+    static Order make_market(const std::string &symbol, Direction direction, double volume) {
+        return Order(symbol, direction, volume, OrderType::MARKET, std::nullopt);
+    }
+
+    static Order make_limit(const std::string &symbol, Direction direction, double volume,
+                            double entry_price) {
+        return Order(symbol, direction, volume, OrderType::LIMIT, entry_price);
+    }
+
+    static Order make_stop(const std::string &symbol, Direction direction, double volume,
+                           double entry_price) {
+        return Order(symbol, direction, volume, OrderType::STOP, entry_price);
+    }
 
     bool execute() {
         if (status_ != OrderStatus::PENDING) {
@@ -55,18 +64,23 @@ class Order {
         return type_;
     }
 
-    double get_entry_price() const {
+    std::optional<double> get_entry_price() const {
         return entry_price_;
     }
 
   private:
+    Order(const std::string &symbol, Direction direction, double volume, OrderType type,
+          std::optional<double> entry_price)
+        : id_{++last_order_id}, symbol_{symbol}, direction_{direction}, volume_{volume},
+          type_{type}, entry_price_{entry_price} {}
+
     uint32_t id_;
     OrderStatus status_ = OrderStatus::PENDING;
     std::string symbol_;
     Direction direction_;
     double volume_;
     OrderType type_;
-    double entry_price_;
+    std::optional<double> entry_price_;
 
     static inline uint32_t last_order_id = 0;
 };
