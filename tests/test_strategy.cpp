@@ -1,5 +1,4 @@
 #include "backtester/enums/Direction.hpp"
-#include "backtester/enums/OrderType.hpp"
 #include "backtester/events/MarketEvent.hpp"
 #include "backtester/models/Signal.hpp"
 #include "backtester/strategy/Strategy.hpp"
@@ -9,9 +8,8 @@ TEST(Strategy, BuyOnMarketStrategy) {
     class BuyOnMarketStrategy : public Strategy {
       public:
         void on_market(const MarketEvent &event) override {
-            Signal signal(event.get_data().get_symbol(), Direction::LONG, OrderType::MARKET,
-                          event.get_data().get_close());
-            this->signal = std::make_unique<Signal>(signal);
+            this->signal = std::make_unique<Signal>(
+                Signal::make_market(event.get_data().get_symbol(), Direction::LONG));
         }
 
         std::unique_ptr<Signal> signal = nullptr;

@@ -6,6 +6,7 @@ add_executable(unit_tests
     test_event_queue.cpp
     test_strategy.cpp
 
+    test_signal.cpp
     test_order.cpp
 )
 
