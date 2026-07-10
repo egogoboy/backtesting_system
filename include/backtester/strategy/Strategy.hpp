@@ -8,10 +8,11 @@
 
 class Engine;
 
-class Strategy : public std::enable_shared_from_this<Strategy> {
+class Strategy {
   public:
     virtual void on_market(const MarketEvent &event) = 0;
 
+    Strategy() = default;
     Strategy(const Strategy &other) = default;
     Strategy(Strategy &&other) = default;
     Strategy &operator=(const Strategy &other) = default;
