@@ -8,6 +8,7 @@ add_executable(unit_tests
 
     test_signal.cpp
     test_order.cpp
+    test_position.cpp
 )
 
 target_link_libraries(unit_tests
