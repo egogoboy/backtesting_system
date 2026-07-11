@@ -4,7 +4,10 @@
 #include "backtester/enums/OrderStatus.hpp"
 #include "backtester/enums/OrderType.hpp"
 #include <cstdint>
+#include <memory>
 #include <string>
+
+class Position;
 
 class Order {
   public:
@@ -81,6 +84,7 @@ class Order {
     double volume_;
     OrderType type_;
     std::optional<double> entry_price_;
+    std::weak_ptr<Position> position_;
 
     static inline uint32_t last_order_id = 0;
 };
