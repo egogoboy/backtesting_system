@@ -8,6 +8,10 @@ class SignalEvent : public Event {
   public:
     SignalEvent(const Signal &signal) : data_{signal} {}
 
+    Signal get_data() const {
+        return data_;
+    }
+
     EventType get_type() const override {
         return EventType::SIGNAL;
     }
