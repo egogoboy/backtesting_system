@@ -2,17 +2,18 @@
 
 #include "backtester/enums/Direction.hpp"
 #include "backtester/enums/PositionStatus.hpp"
+#include "backtester/models/Instrument.hpp"
 #include "backtester/models/Order.hpp"
 #include <cstdint>
+#include <functional>
 #include <memory>
 #include <optional>
-#include <string>
 
 class Position {
   public:
-    Position(const std::string &symbol, double volume, Direction direction, double entry_price)
-        : id_{++last_position_id}, symbol_{symbol}, volume_{volume}, direction_{direction},
-          entry_price_{entry_price} {}
+    Position(const Instrument &instrument, double quantity, Direction direction, double entry_price)
+        : id_{++last_position_id}, instrument_{instrument}, quantity_{quantity},
+          direction_{direction}, entry_price_{entry_price} {}
 
     bool close_position() {
         if (status_ != PositionStatus::OPEN) {
@@ -27,12 +28,12 @@ class Position {
         return id_;
     }
 
-    std::string get_symbol() const {
-        return symbol_;
+    const Instrument &get_instrument() const {
+        return instrument_;
     }
 
-    double get_volume() const {
-        return volume_;
+    double get_quantity() const {
+        return quantity_;
     }
 
     Direction get_direction() const {
@@ -61,8 +62,8 @@ class Position {
 
   private:
     uint32_t id_;
-    std::string symbol_;
-    double volume_;
+    std::reference_wrapper<const Instrument> instrument_;
+    double quantity_;
     Direction direction_;
     double entry_price_;
     std::optional<double> exit_price_;

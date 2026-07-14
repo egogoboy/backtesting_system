@@ -1,17 +1,17 @@
 #include "backtester/utils/CSVFileLoader.hpp"
+#include "backtester/models/Instrument.hpp"
 
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
 
-std::vector<MarketData> CSVFileLoader::load_file(const std::string &filename) {
+std::vector<MarketData> CSVFileLoader::load_file(const std::string &filename,
+                                                 const Instrument &instrument) {
     std::ifstream fin(filename);
 
     if (!fin.is_open()) {
         throw std::runtime_error("load_file: File not found!");
     }
-
-    std::string symbol = filename.substr(0, FILENAME_SYMBOL_LENGTH);
 
     std::vector<MarketData> data;
     std::string line;
@@ -38,7 +38,7 @@ std::vector<MarketData> CSVFileLoader::load_file(const std::string &filename) {
             ohlc.close = std::stod(token);
         }
 
-        data.push_back(MarketData(symbol, ohlc, time));
+        data.push_back(MarketData(instrument, ohlc, time));
     }
 
     fin.close();

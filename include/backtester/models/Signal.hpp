@@ -2,31 +2,32 @@
 
 #include "backtester/enums/Direction.hpp"
 #include "backtester/enums/OrderType.hpp"
+#include "backtester/models/Instrument.hpp"
 #include <optional>
-#include <string>
 
 class Signal {
   public:
-    static Signal make_market(const std::string &symbol, Direction direction,
+    static Signal make_market(const Instrument &instrument, Direction direction,
                               std::optional<double> stop_loss = std::nullopt,
                               std::optional<double> take_profit = std::nullopt) {
-        return Signal(symbol, direction, OrderType::MARKET, std::nullopt, stop_loss, take_profit);
+        return Signal(instrument, direction, OrderType::MARKET, std::nullopt, stop_loss,
+                      take_profit);
     }
 
-    static Signal make_limit(const std::string &symbol, Direction direction, double entry_price,
+    static Signal make_limit(const Instrument &instrument, Direction direction, double entry_price,
                              std::optional<double> stop_loss = std::nullopt,
                              std::optional<double> take_profit = std::nullopt) {
-        return Signal(symbol, direction, OrderType::LIMIT, entry_price, stop_loss, take_profit);
+        return Signal(instrument, direction, OrderType::LIMIT, entry_price, stop_loss, take_profit);
     }
 
-    static Signal make_stop(const std::string &symbol, Direction direction, double entry_price,
+    static Signal make_stop(const Instrument &instrument, Direction direction, double entry_price,
                             std::optional<double> stop_loss = std::nullopt,
                             std::optional<double> take_profit = std::nullopt) {
-        return Signal(symbol, direction, OrderType::STOP, entry_price, stop_loss, take_profit);
+        return Signal(instrument, direction, OrderType::STOP, entry_price, stop_loss, take_profit);
     }
 
-    std::string get_symbol() const {
-        return symbol_;
+    const Instrument &get_instrument() const {
+        return instrument_;
     }
 
     Direction get_direction() const {
@@ -50,13 +51,13 @@ class Signal {
     }
 
   private:
-    Signal(const std::string &symbol, Direction direction, OrderType type,
+    Signal(const Instrument &instrument, Direction direction, OrderType type,
            std::optional<double> entry_price, std::optional<double> stop_loss,
            std::optional<double> take_profit)
-        : symbol_{symbol}, direction_{direction}, type_{type}, entry_price_{entry_price},
+        : instrument_{instrument}, direction_{direction}, type_{type}, entry_price_{entry_price},
           stop_loss_price_{stop_loss}, take_profit_price_{take_profit} {}
 
-    std::string symbol_;
+    std::reference_wrapper<const Instrument> instrument_;
     Direction direction_;
     OrderType type_;
     std::optional<double> entry_price_;

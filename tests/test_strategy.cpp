@@ -2,6 +2,7 @@
 #include "backtester/events/MarketEvent.hpp"
 #include "backtester/models/Signal.hpp"
 #include "backtester/strategy/Strategy.hpp"
+#include "test_utils.hpp"
 #include <gtest/gtest.h>
 
 TEST(Strategy, BuyOnMarketStrategy) {
@@ -9,13 +10,13 @@ TEST(Strategy, BuyOnMarketStrategy) {
       public:
         void on_market(const MarketEvent &event) override {
             this->signal = std::make_unique<Signal>(
-                Signal::make_market(event.get_data().get_symbol(), Direction::LONG));
+                Signal::make_market(event.get_data().get_instrument(), Direction::LONG));
         }
 
         std::unique_ptr<Signal> signal = nullptr;
     };
 
-    MarketData data("EURUSD", {1, 2, 3, 4}, 5);
+    MarketData data(GLOBAL_EURUSD_INSTRUMENT, {1, 2, 3, 4}, 5);
 
     MarketEvent event(data);
     BuyOnMarketStrategy strategy;
@@ -33,7 +34,7 @@ TEST(Strategy, DoNothingStrategy) {
         std::unique_ptr<Signal> signal = nullptr;
     };
 
-    MarketData data("EURUSD", {1, 2, 3, 4}, 5);
+    MarketData data(GLOBAL_EURUSD_INSTRUMENT, {1, 2, 3, 4}, 5);
 
     MarketEvent event(data);
     DoNothingStrategy strategy;

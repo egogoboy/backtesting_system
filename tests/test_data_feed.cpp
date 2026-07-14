@@ -1,4 +1,5 @@
 #include "backtester/data_feed/DataFeed.hpp"
+#include "test_utils.hpp"
 #include <fstream>
 #include <gtest/gtest.h>
 
@@ -15,7 +16,7 @@ TEST(DataFeed, LoadFromFile) {
         fout << time << ", " << ohlc.open << ", " << ohlc.high << ", " << ohlc.low << ", "
              << ohlc.close << '\n';
 
-        raw_data.push_back(MarketData("tempor", ohlc, time));
+        raw_data.push_back(MarketData(GLOBAL_EURUSD_INSTRUMENT, ohlc, time));
 
         ++ohlc.open;
         ++ohlc.high;
@@ -26,7 +27,7 @@ TEST(DataFeed, LoadFromFile) {
 
     fout.close();
 
-    DataFeed data_feed(temp_file);
+    DataFeed data_feed(temp_file, GLOBAL_EURUSD_INSTRUMENT);
 
     std::filesystem::remove(temp_file);
 
@@ -34,10 +35,6 @@ TEST(DataFeed, LoadFromFile) {
 
     while (data_feed.has_next()) {
         MarketData md = data_feed.get_next_market_event().get_data();
-        std::cout << it->get_symbol() << " " << it->get_timestamp() << it->get_open()
-                  << it->get_close() << '\n';
-        std::cout << md.get_symbol() << " " << md.get_timestamp() << md.get_open() << md.get_close()
-                  << '\n';
-        EXPECT_EQ(*it++, md);
+        EXPECT_EQ(compare_market_data(*it++, md), true);
     }
 }

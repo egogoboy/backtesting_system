@@ -1,5 +1,6 @@
 #include "backtester/models/MarketData.hpp"
 #include "backtester/utils/CSVFileLoader.hpp"
+#include "test_utils.hpp"
 
 #include <fstream>
 #include <gtest/gtest.h>
@@ -7,7 +8,7 @@
 #include <vector>
 
 TEST(FileTest, NotFound) {
-    EXPECT_ANY_THROW(CSVFileLoader::load_file("non-existent file"));
+    EXPECT_ANY_THROW(CSVFileLoader::load_file("non-existent file", GLOBAL_EURUSD_INSTRUMENT));
 }
 
 TEST(FileTest, ReadFromFile) {
@@ -23,7 +24,7 @@ TEST(FileTest, ReadFromFile) {
         fout << time << ", " << ohlc.open << ", " << ohlc.high << ", " << ohlc.low << ", "
              << ohlc.close << '\n';
 
-        raw_data.push_back(MarketData("tempor", ohlc, time));
+        raw_data.push_back(MarketData(GLOBAL_EURUSD_INSTRUMENT, ohlc, time));
 
         ++ohlc.open;
         ++ohlc.high;
@@ -34,13 +35,14 @@ TEST(FileTest, ReadFromFile) {
 
     fout.close();
 
-    std::vector<MarketData> loaded_data = CSVFileLoader::load_file(temp_file);
+    std::vector<MarketData> loaded_data =
+        CSVFileLoader::load_file(temp_file, GLOBAL_EURUSD_INSTRUMENT);
 
     std::filesystem::remove(temp_file);
 
     for (auto it1 = raw_data.begin(), it2 = loaded_data.begin();
          it1 != raw_data.end() && it2 != raw_data.end(); ++it1, ++it2) {
-        EXPECT_EQ(*it1, *it2);
+        EXPECT_EQ(compare_market_data(*it1, *it2), true);
     }
 }
 
@@ -54,7 +56,8 @@ TEST(FileTest, InvalidFile) {
 
     fout.close();
 
-    EXPECT_THROW(CSVFileLoader::load_file(temp_file), std::invalid_argument);
+    EXPECT_THROW(CSVFileLoader::load_file(temp_file, GLOBAL_EURUSD_INSTRUMENT),
+                 std::invalid_argument);
 
     std::filesystem::remove(temp_file);
 }

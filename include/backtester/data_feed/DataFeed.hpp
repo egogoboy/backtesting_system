@@ -1,6 +1,7 @@
 #pragma once
 
 #include "backtester/events/MarketEvent.hpp"
+#include "backtester/models/Instrument.hpp"
 #include "backtester/models/MarketData.hpp"
 #include "backtester/utils/CSVFileLoader.hpp"
 #include <string>
@@ -8,8 +9,8 @@
 
 class DataFeed {
   public:
-    DataFeed(const std::string &filename) {
-        data_ = CSVFileLoader::load_file(filename);
+    DataFeed(const std::string &filename, const Instrument &instrument) {
+        data_ = CSVFileLoader::load_file(filename, instrument);
         current_ = data_.begin();
     }
 

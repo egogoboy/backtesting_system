@@ -1,7 +1,8 @@
 #pragma once
 
+#include "backtester/models/Instrument.hpp"
 #include <cstdint>
-#include <string>
+#include <functional>
 
 struct OHLC {
     double open;
@@ -12,12 +13,12 @@ struct OHLC {
 
 class MarketData {
   public:
-    MarketData(const std::string &symbol, const OHLC &ohlc, uint64_t timestamp)
-        : symbol_{symbol}, open_{ohlc.open}, high_{ohlc.high}, low_{ohlc.low}, close_{ohlc.close},
-          timestamp_{timestamp} {}
+    MarketData(const Instrument &instrument, const OHLC &ohlc, uint64_t timestamp)
+        : instrument_{instrument}, open_{ohlc.open}, high_{ohlc.high}, low_{ohlc.low},
+          close_{ohlc.close}, timestamp_{timestamp} {}
 
-    std::string get_symbol() const {
-        return symbol_;
+    const Instrument &get_instrument() const {
+        return instrument_;
     }
 
     double get_open() const {
@@ -40,13 +41,8 @@ class MarketData {
         return timestamp_;
     }
 
-    friend bool operator==(const MarketData &lhs, const MarketData &rhs) {
-        return lhs.symbol_ == rhs.symbol_ && lhs.open_ == rhs.open_ && lhs.high_ == rhs.high_ &&
-               lhs.low_ == rhs.low_ && lhs.close_ == rhs.close_ && lhs.timestamp_ == rhs.timestamp_;
-    }
-
   private:
-    std::string symbol_;
+    std::reference_wrapper<const Instrument> instrument_;
     double open_;
     double high_;
     double low_;
