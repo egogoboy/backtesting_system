@@ -2,7 +2,7 @@
 
 #include "backtester/models/MarketData.hpp"
 
-const inline Instrument GLOBAL_EURUSD_INSTRUMENT("EURUSD", 100000, 0.0001, 1);
+const inline Instrument GLOBAL_EURUSD_INSTRUMENT("EURUSD", 100000, 0.0001, 100000);
 
 inline bool compare_market_data(const MarketData &lhs, const MarketData &rhs) {
     return lhs.get_open() == rhs.get_open() && lhs.get_high() == rhs.get_high() &&
