@@ -19,4 +19,5 @@ target_sources(backtester_core
         models/MarketData.cpp
 
         utils/CSVFileLoader.cpp
+        utils/PnLCalculator.cpp
 )

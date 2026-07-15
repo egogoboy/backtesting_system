@@ -2,6 +2,8 @@ add_executable(unit_tests
     test_main.cpp
 
     test_csv_file_loader.cpp
+    test_pnl_calculator.cpp
+
     test_data_feed.cpp
     test_event_queue.cpp
     test_strategy.cpp
