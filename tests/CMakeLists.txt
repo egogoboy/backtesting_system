@@ -7,6 +7,7 @@ add_executable(unit_tests
     test_data_feed.cpp
     test_event_queue.cpp
     test_strategy.cpp
+    test_portfolio.cpp
 
     test_signal.cpp
     test_order.cpp

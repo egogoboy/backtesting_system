@@ -16,6 +16,8 @@ target_sources(backtester_core
         events/Event.cpp
         events/MarketEvent.cpp
 
+        portfolio/Portfolio.cpp
+
         models/MarketData.cpp
 
         utils/CSVFileLoader.cpp
