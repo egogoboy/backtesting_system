@@ -11,8 +11,6 @@ target_sources(backtester_core
 
         data_feed/DataFeed.cpp
 
-        enums/EventType.cpp
-
         events/Event.cpp
         events/MarketEvent.cpp
 
