@@ -9,14 +9,7 @@ target_sources(backtester_core
     PRIVATE
         core/Engine.cpp
 
-        data_feed/DataFeed.cpp
-
-        events/Event.cpp
-        events/MarketEvent.cpp
-
         portfolio/Portfolio.cpp
-
-        models/MarketData.cpp
 
         utils/CSVFileLoader.cpp
         utils/PnLCalculator.cpp
