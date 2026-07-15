@@ -15,12 +15,14 @@ class Position {
         : id_{++last_position_id}, instrument_{instrument}, quantity_{quantity},
           direction_{direction}, entry_price_{entry_price} {}
 
-    bool close_position() {
+    bool close_position(double exit_price) {
         if (status_ != PositionStatus::OPEN) {
             return false;
         }
 
         status_ = PositionStatus::CLOSE;
+
+        exit_price_ = exit_price;
         return true;
     }
 
