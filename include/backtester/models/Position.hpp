@@ -3,11 +3,12 @@
 #include "backtester/enums/Direction.hpp"
 #include "backtester/enums/PositionStatus.hpp"
 #include "backtester/models/Instrument.hpp"
-#include "backtester/models/Order.hpp"
 #include <cstdint>
 #include <functional>
 #include <memory>
 #include <optional>
+
+class Order;
 
 class Position {
   public:
