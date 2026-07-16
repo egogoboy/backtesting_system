@@ -1,9 +1,11 @@
 #pragma once
 
 #include "backtester/enums/Direction.hpp"
+#include "backtester/enums/OrderRole.hpp"
 #include "backtester/enums/OrderStatus.hpp"
 #include "backtester/enums/OrderType.hpp"
 #include "backtester/models/Instrument.hpp"
+
 #include <cstdint>
 #include <memory>
 
@@ -11,79 +13,54 @@ class Position;
 
 class Order {
   public:
-    static Order make_market(const Instrument &instrument, Direction direction, double volume) {
-        return Order(instrument, direction, volume, OrderType::MARKET, std::nullopt);
-    }
-
+    static Order make_market(const Instrument &instrument, Direction direction, double volume);
     static Order make_limit(const Instrument &instrument, Direction direction, double volume,
-                            double entry_price) {
-        return Order(instrument, direction, volume, OrderType::LIMIT, entry_price);
-    }
+                            double trigger_price);
 
     static Order make_stop(const Instrument &instrument, Direction direction, double volume,
-                           double entry_price) {
-        return Order(instrument, direction, volume, OrderType::STOP, entry_price);
-    }
+                           double trigger_price);
 
-    bool execute() {
-        if (status_ != OrderStatus::PENDING) {
-            return false;
-        }
+    static Order make_stop_loss(const std::shared_ptr<Position> &position, double trigger_price);
 
-        status_ = OrderStatus::EXECUTED;
-        return true;
-    }
+    static Order make_take_profit(const std::shared_ptr<Position> &position, double trigger_price);
 
-    bool cancel() {
-        if (status_ != OrderStatus::PENDING) {
-            return false;
-        }
+    bool execute();
 
-        status_ = OrderStatus::CANCELED;
-        return true;
-    }
+    bool cancel();
 
-    uint32_t get_id() const {
-        return id_;
-    }
+    uint32_t get_id() const;
 
-    OrderStatus get_status() const {
-        return status_;
-    }
+    OrderStatus get_status() const;
 
-    const Instrument &get_symbol() const {
-        return instrument_;
-    }
+    bool is_exit_order() const;
 
-    Direction get_direction() const {
-        return direction_;
-    }
+    bool is_entry_order() const;
 
-    double get_volume() const {
-        return volume_;
-    }
+    const Instrument &get_instrument() const;
 
-    OrderType get_type() const {
-        return type_;
-    }
+    Direction get_direction() const;
 
-    std::optional<double> get_entry_price() const {
-        return entry_price_;
-    }
+    double get_volume() const;
+
+    OrderType get_type() const;
+
+    std::optional<double> get_trigger_price() const;
+
+    const std::weak_ptr<Position> &get_position() const;
 
   private:
-    Order(const Instrument &instrument, Direction direction, double volume, OrderType type,
-          std::optional<double> entry_price)
-        : id_{++last_order_id}, instrument_{instrument}, direction_{direction}, volume_{volume},
-          type_{type}, entry_price_{entry_price} {}
+    Order(const Instrument &instrument, Direction direction, OrderRole role, double volume,
+          OrderType type, std::optional<double> trigger_price,
+          const std::shared_ptr<Position> &position);
 
     uint32_t id_;
     OrderStatus status_ = OrderStatus::PENDING;
+    OrderRole role_ = OrderRole::ENTRY;
     std::reference_wrapper<const Instrument> instrument_;
     Direction direction_;
     double volume_;
     OrderType type_;
-    std::optional<double> entry_price_;
+    std::optional<double> trigger_price_;
     std::weak_ptr<Position> position_;
 
     static inline uint32_t last_order_id = 0;

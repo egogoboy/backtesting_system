@@ -11,6 +11,8 @@ target_sources(backtester_core
 
         portfolio/Portfolio.cpp
 
+        models/Order.cpp
+
         utils/CSVFileLoader.cpp
         utils/PnLCalculator.cpp
 )
