@@ -48,6 +48,16 @@ TEST(Portfolio, CalculateBalanceAndRealizedPnL) {
 
     EXPECT_LE(std::abs(portfolio.get_realized_pnl() + 500), 10e-7);
     EXPECT_LE(std::abs(portfolio.get_account_balance() - 9500), 10e-7);
+
+    std::shared_ptr<Position> position_short =
+        std::make_shared<Position>(GLOBAL_EURUSD_INSTRUMENT, 1, Direction::SHORT, 1.175);
+    portfolio.on_event(std::make_shared<FillEvent>(position_short, FillAction::OPEN));
+
+    position_short->close_position(1.170);
+    portfolio.on_event(std::make_shared<FillEvent>(position_short, FillAction::CLOSE));
+
+    EXPECT_LE(std::abs(portfolio.get_realized_pnl()), 10e-7);
+    EXPECT_LE(std::abs(portfolio.get_account_balance() - 10000), 10e-7);
 }
 
 TEST(Portfolio, ChargeFee) {
