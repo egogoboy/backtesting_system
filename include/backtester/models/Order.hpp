@@ -3,26 +3,26 @@
 #include "backtester/enums/Direction.hpp"
 #include "backtester/enums/OrderStatus.hpp"
 #include "backtester/enums/OrderType.hpp"
+#include "backtester/models/Instrument.hpp"
 #include <cstdint>
 #include <memory>
-#include <string>
 
 class Position;
 
 class Order {
   public:
-    static Order make_market(const std::string &symbol, Direction direction, double volume) {
-        return Order(symbol, direction, volume, OrderType::MARKET, std::nullopt);
+    static Order make_market(const Instrument &instrument, Direction direction, double volume) {
+        return Order(instrument, direction, volume, OrderType::MARKET, std::nullopt);
     }
 
-    static Order make_limit(const std::string &symbol, Direction direction, double volume,
+    static Order make_limit(const Instrument &instrument, Direction direction, double volume,
                             double entry_price) {
-        return Order(symbol, direction, volume, OrderType::LIMIT, entry_price);
+        return Order(instrument, direction, volume, OrderType::LIMIT, entry_price);
     }
 
-    static Order make_stop(const std::string &symbol, Direction direction, double volume,
+    static Order make_stop(const Instrument &instrument, Direction direction, double volume,
                            double entry_price) {
-        return Order(symbol, direction, volume, OrderType::STOP, entry_price);
+        return Order(instrument, direction, volume, OrderType::STOP, entry_price);
     }
 
     bool execute() {
@@ -51,8 +51,8 @@ class Order {
         return status_;
     }
 
-    const std::string &get_symbol() const {
-        return symbol_;
+    const Instrument &get_symbol() const {
+        return instrument_;
     }
 
     Direction get_direction() const {
@@ -72,14 +72,14 @@ class Order {
     }
 
   private:
-    Order(const std::string &symbol, Direction direction, double volume, OrderType type,
+    Order(const Instrument &instrument, Direction direction, double volume, OrderType type,
           std::optional<double> entry_price)
-        : id_{++last_order_id}, symbol_{symbol}, direction_{direction}, volume_{volume},
+        : id_{++last_order_id}, instrument_{instrument}, direction_{direction}, volume_{volume},
           type_{type}, entry_price_{entry_price} {}
 
     uint32_t id_;
     OrderStatus status_ = OrderStatus::PENDING;
-    std::string symbol_;
+    std::reference_wrapper<const Instrument> instrument_;
     Direction direction_;
     double volume_;
     OrderType type_;
