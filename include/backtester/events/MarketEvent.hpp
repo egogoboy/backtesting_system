@@ -12,7 +12,7 @@ class MarketEvent : public Event {
         return EventType::MARKET;
     }
 
-    MarketData get_data() const {
+    const MarketData &get_data() const {
         return data_;
     }
 
