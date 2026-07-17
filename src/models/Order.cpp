@@ -1,21 +1,22 @@
 #include "backtester/models/Order.hpp"
 #include "backtester/models/Position.hpp"
 
-Order Order::make_market(const Instrument &instrument, Direction direction, double volume) {
+Order Order::make_market(const Instrument &instrument, Direction direction, double volume,
+                         double stop_loss_price, double take_profit_price) {
     return Order(instrument, direction, OrderRole::ENTRY, volume, OrderType::MARKET, std::nullopt,
-                 nullptr);
+                 stop_loss_price, take_profit_price, nullptr);
 }
 
 Order Order::make_limit(const Instrument &instrument, Direction direction, double volume,
-                        double trigger_price) {
+                        double trigger_price, double stop_loss_price, double take_profit_price) {
     return Order(instrument, direction, OrderRole::ENTRY, volume, OrderType::LIMIT, trigger_price,
-                 nullptr);
+                 stop_loss_price, take_profit_price, nullptr);
 }
 
 Order Order::make_stop(const Instrument &instrument, Direction direction, double volume,
-                       double trigger_price) {
+                       double trigger_price, double stop_loss_price, double take_profit_price) {
     return Order(instrument, direction, OrderRole::ENTRY, volume, OrderType::STOP, trigger_price,
-                 nullptr);
+                 stop_loss_price, take_profit_price, nullptr);
 }
 
 Order Order::make_stop_loss(const std::shared_ptr<Position> &position, double trigger_price) {
@@ -29,7 +30,8 @@ Order Order::make_stop_loss(const std::shared_ptr<Position> &position, double tr
     }
 
     return Order(position->get_instrument(), order_direction, OrderRole::EXIT,
-                 position->get_quantity(), OrderType::STOP, trigger_price, position);
+                 position->get_quantity(), OrderType::STOP, trigger_price, std::nullopt,
+                 std::nullopt, position);
 }
 
 Order Order::make_take_profit(const std::shared_ptr<Position> &position, double trigger_price) {
@@ -43,7 +45,8 @@ Order Order::make_take_profit(const std::shared_ptr<Position> &position, double 
     }
 
     return Order(position->get_instrument(), order_direction, OrderRole::EXIT,
-                 position->get_quantity(), OrderType::LIMIT, trigger_price, position);
+                 position->get_quantity(), OrderType::LIMIT, trigger_price, std::nullopt,
+                 std::nullopt, position);
 }
 
 bool Order::execute() {
@@ -106,6 +109,8 @@ const std::weak_ptr<Position> &Order::get_position() const {
 
 Order::Order(const Instrument &instrument, Direction direction, OrderRole role, double volume,
              OrderType type, std::optional<double> trigger_price,
+             std::optional<double> stop_loss_price, std::optional<double> take_profit_price,
              const std::shared_ptr<Position> &position)
     : id_{++last_order_id}, role_{role}, instrument_{instrument}, direction_{direction},
-      volume_{volume}, type_{type}, trigger_price_{trigger_price}, position_{position} {}
+      volume_{volume}, type_{type}, trigger_price_{trigger_price}, position_{position},
+      stop_loss_price_{stop_loss_price}, take_profit_price_{take_profit_price} {}

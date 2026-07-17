@@ -13,12 +13,14 @@ class Position;
 
 class Order {
   public:
-    static Order make_market(const Instrument &instrument, Direction direction, double volume);
+    static Order make_market(const Instrument &instrument, Direction direction, double volume,
+                             double stop_loss_price, double take_profit_price);
+
     static Order make_limit(const Instrument &instrument, Direction direction, double volume,
-                            double trigger_price);
+                            double trigger_price, double stop_loss_price, double take_profit_price);
 
     static Order make_stop(const Instrument &instrument, Direction direction, double volume,
-                           double trigger_price);
+                           double trigger_price, double stop_loss_price, double take_profit_price);
 
     static Order make_stop_loss(const std::shared_ptr<Position> &position, double trigger_price);
 
@@ -51,6 +53,7 @@ class Order {
   private:
     Order(const Instrument &instrument, Direction direction, OrderRole role, double volume,
           OrderType type, std::optional<double> trigger_price,
+          std::optional<double> stop_loss_price, std::optional<double> take_profit_price,
           const std::shared_ptr<Position> &position);
 
     uint32_t id_;
@@ -62,6 +65,9 @@ class Order {
     OrderType type_;
     std::optional<double> trigger_price_;
     std::weak_ptr<Position> position_;
+
+    std::optional<double> stop_loss_price_;
+    std::optional<double> take_profit_price_;
 
     static inline uint32_t last_order_id = 0;
 };
