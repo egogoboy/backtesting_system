@@ -10,7 +10,7 @@ TEST(Strategy, BuyOnMarketStrategy) {
       public:
         void on_market(const MarketEvent &event) override {
             this->signal = std::make_unique<Signal>(
-                Signal::make_market(event.get_data().get_instrument(), Direction::LONG));
+                Signal::make_market(event.get_data().get_instrument(), Direction::LONG, 1, 1));
         }
 
         std::unique_ptr<Signal> signal = nullptr;
