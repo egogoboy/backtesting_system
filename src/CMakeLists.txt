@@ -10,6 +10,7 @@ target_sources(backtester_core
         core/Engine.cpp
 
         portfolio/Portfolio.cpp
+        risk_manager/RiskManager.cpp
 
         models/Order.cpp
 
